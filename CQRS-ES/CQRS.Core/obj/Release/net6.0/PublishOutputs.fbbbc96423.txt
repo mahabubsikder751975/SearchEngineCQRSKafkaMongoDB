@@ -1,0 +1,17 @@
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\CQRS.Core.dll
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\CQRS.Core.deps.json
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\CQRS.Core.pdb
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\AWSSDK.Core.dll
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\AWSSDK.SecurityToken.dll
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\DnsClient.dll
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\Microsoft.Extensions.Logging.Abstractions.dll
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\MongoDB.Bson.dll
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\MongoDB.Driver.dll
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\MongoDB.Driver.Core.dll
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\MongoDB.Libmongocrypt.dll
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\SharpCompress.dll
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\Snappier.dll
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\ZstdSharp.dll
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\runtimes\linux\native\libmongocrypt.so
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\runtimes\osx\native\libmongocrypt.dylib
+D:\Software\ShadhinSearchEngine\ReleaseBin\20240416\runtimes\win\native\mongocrypt.dll

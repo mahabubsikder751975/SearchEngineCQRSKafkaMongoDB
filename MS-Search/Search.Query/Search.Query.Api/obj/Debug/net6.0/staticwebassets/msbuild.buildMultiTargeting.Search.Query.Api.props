@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Search.Query.Api.props" />
+</Project>

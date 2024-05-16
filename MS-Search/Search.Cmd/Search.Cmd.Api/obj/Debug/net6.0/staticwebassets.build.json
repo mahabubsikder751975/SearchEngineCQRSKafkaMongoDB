@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "SaBRmNvO9cvCqbWWwhTmyeIXWtrXh5JG67NGBgNiOwc=",
+  "Source": "Search.Cmd.Api",
+  "BasePath": "_content/Search.Cmd.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

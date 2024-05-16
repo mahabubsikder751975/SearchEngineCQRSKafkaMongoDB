@@ -1,0 +1,17 @@
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\CQRS.Core.dll
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\CQRS.Core.deps.json
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\CQRS.Core.pdb
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\AWSSDK.Core.dll
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\AWSSDK.SecurityToken.dll
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\DnsClient.dll
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\MongoDB.Bson.dll
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\MongoDB.Driver.dll
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\MongoDB.Driver.Core.dll
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\MongoDB.Libmongocrypt.dll
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\SharpCompress.dll
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\Snappier.dll
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\ZstdSharp.dll
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\runtimes\linux\native\libmongocrypt.so
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\runtimes\osx\native\libmongocrypt.dylib
+C:\Users\User\source\repos\shadhinsearchengine\MS-Search\release08052924\runtimes\win\native\mongocrypt.dll

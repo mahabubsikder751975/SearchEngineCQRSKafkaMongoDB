@@ -22,6 +22,7 @@ namespace Search.Cmd.Infrastructure.Repositories
         {
             return await _eventstorecollection.Find(x=>true).ToListAsync().ConfigureAwait(false);
         }
+     
 
         public async Task<List<EventModel>> FindByAggregateId(Guid aggregateid)
         {

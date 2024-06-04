@@ -41,6 +41,11 @@ namespace Search.Cmd.Infrastructure.Handlers
             return aggregate;
         }
 
+        public Task<List<SearchAggregate>> ListGetbyUserCodeAsync(string UserCode)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task RepublishEventsAsync()
         {
             var aggregateIds = await _eventStore.GetAggregateIdsAsync();

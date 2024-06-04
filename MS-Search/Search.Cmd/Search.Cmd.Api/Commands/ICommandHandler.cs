@@ -11,5 +11,7 @@ namespace Search.Cmd.Api.Commands
 
         Task HandleAsync(DeleteSearchHistoryCommand command);
 
+         Task HandleAsync(DeleteAllSearchHistoryCommand command);
+
     }
 }

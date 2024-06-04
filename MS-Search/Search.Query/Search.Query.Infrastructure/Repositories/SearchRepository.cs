@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +19,7 @@ namespace Search.Query.Infrastructure.Repositories
         {
             _contextFactory = contextFactory;
         }
-
+  
         public async Task CreateAsync(SearchEntity search)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
@@ -121,6 +122,14 @@ namespace Search.Query.Infrastructure.Repositories
             _ = await context.SaveChangesAsync();
         }
 
+        public async Task<List<SearchHistoryEntity>> SearchHistoryListByUserCodeAsync(string userCode)
+        {
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            return await context.SearchHistories.AsNoTracking()                    
+                    .Where(x => x.UserCode.Contains(userCode))
+                    .ToListAsync();
+        }
+
         public async Task DeleteHistoryAsync(Guid searchHistoryId)
         {
             using DatabaseContext context = _contextFactory.CreateDbContext();
@@ -131,6 +140,40 @@ namespace Search.Query.Infrastructure.Repositories
             search.IsDeleted = true;
             context.SearchHistories.Update(search);
             _ = await context.SaveChangesAsync();
+        }
+      
+
+        public async Task DeleteAllHistoryAsync(string UserCode)
+        {
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            List<SearchHistoryEntity> searchHistoryList = await SearchHistoryListByUserCodeAsync(UserCode);
+
+            if (searchHistoryList == null || !searchHistoryList.Any())
+            {
+                return;
+            }
+            
+            searchHistoryList.ForEach(x =>
+            {
+                x.IsDeleted=true;
+            });   
+                        
+            context.SearchHistories.UpdateRange(searchHistoryList);
+            _ = await context.SaveChangesAsync();
+        }
+
+        public async Task<List<SearchSuggestion>> GetSuggestionBySearchKeyAsync(string searchText)
+        {
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            List<SearchSuggestion> searchSuggestions = await context.GetSearchSuggestionsBySearchKeyAsync(searchText);            
+            return searchSuggestions;
+        }
+
+        public async Task<List<ItemUrls>> GetItemUrlsAsync(DataTable dataTable)
+        {
+            using DatabaseContext context = _contextFactory.CreateDbContext();
+            List<ItemUrls> itemUrls = await context.GetItemUrlsAsync(dataTable);            
+            return itemUrls;        
         }
     }
 }

@@ -8,7 +8,7 @@ namespace CQRS.Core.Events
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
 
-        public string  Id { get; set; }
+        public string  Id { get; set; }        
         public DateTime TimeStamp { get; set; }
         public Guid AggregateIdentifier { get; set; }
 

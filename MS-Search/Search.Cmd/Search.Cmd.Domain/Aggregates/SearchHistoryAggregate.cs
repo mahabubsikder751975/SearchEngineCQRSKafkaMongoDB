@@ -54,5 +54,28 @@ namespace Search.Cmd.Domain.Aggregates
 
         }
 
+
+
+        public void DeleteAllSearchHistory(string userCode){
+
+            //   if (!_active)
+            // {
+            //     throw new InvalidOperationException("This User Search has already been removed!");
+            // }    
+
+            
+            RaiseEvent(new AllSearchHistoryRemovedEvent{    
+                UserCode = userCode,                            
+                Id= _id                        
+            });           
+        }
+        
+        public void Apply(AllSearchHistoryRemovedEvent @event){
+            _id=@event.Id;
+            _usercode = @event.UserCode;
+            _active = false;    
+
+        }    
+
     }
 }

@@ -20,12 +20,11 @@ namespace Search.Cmd.Api.Controllers
         }
  
     
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteSearchHistoryAsync(Guid id, DeleteSearchHistoryCommand command)
+        [HttpDelete]
+        public async Task<ActionResult> DeleteSearchHistoryAsync([FromQuery] DeleteSearchHistoryCommand command)
         {
             try
-            {
-                command.Id = id;
+            {                
                 await _commandDispatcher.SendAsync(command);
                 
                 //If it is successful, it returns status 200

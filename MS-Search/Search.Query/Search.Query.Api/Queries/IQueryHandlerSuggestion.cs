@@ -9,5 +9,7 @@ namespace Search.Query.Api.Queries
         Task<List<SearchSuggestion>> HandleAsync(FindSuggestionsBySearchTextFromHistoryQuery query);
 
         Task<List<SearchSuggestion>> HandleAsync(FindSuggestionsBySearchTextQuery query);
+
+        Task<List<SearchSuggestion>> HandleAsync(FindSuggestionsBySearchKeyQuery query);
     }
 }

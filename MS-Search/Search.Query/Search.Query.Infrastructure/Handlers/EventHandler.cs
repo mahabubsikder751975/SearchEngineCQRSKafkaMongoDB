@@ -54,6 +54,13 @@ namespace Search.Query.Infrastructure.Handlers
         public async Task On(SearchHistoryRemovedEvent @event)
         {
             await _searchRepository.DeleteHistoryAsync(@event.Id);
+
+        }
+
+         public async Task On(AllSearchHistoryRemovedEvent @event)
+        {
+            await _searchRepository.DeleteAllHistoryAsync(@event.UserCode);
+
         }
 
 

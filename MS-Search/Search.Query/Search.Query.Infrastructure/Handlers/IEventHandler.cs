@@ -13,5 +13,8 @@ namespace Search.Query.Infrastructure.Handlers
 
         Task On(SearchHistoryCreatedEvent @event);       
         Task On(SearchHistoryRemovedEvent @event);
+
+        Task On(AllSearchHistoryRemovedEvent @event);
+        
     }
 }

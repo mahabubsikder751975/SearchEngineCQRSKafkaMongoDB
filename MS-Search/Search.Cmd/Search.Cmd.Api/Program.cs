@@ -36,7 +36,7 @@ dispatcher.RegisterHandle<RestoreReadDbCommand>(commandHandler.HandleAsync);
 
 dispatcher.RegisterHandle<NewSearchHistoryCommand>(commandHandler.HandleAsync);
 dispatcher.RegisterHandle<DeleteSearchHistoryCommand>(commandHandler.HandleAsync);
-
+dispatcher.RegisterHandle<DeleteAllSearchHistoryCommand>(commandHandler.HandleAsync);
 
 builder.Services.AddSingleton<ICommandDispatcher>(_ => dispatcher);
  

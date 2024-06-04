@@ -48,6 +48,7 @@ namespace Search.Query.Infrastructure.Converters
                 nameof(SearchRemovedEvent) => JsonSerializer.Deserialize<SearchRemovedEvent>(json, options),
                 nameof(SearchHistoryCreatedEvent) => JsonSerializer.Deserialize<SearchHistoryCreatedEvent>(json, options),
                 nameof(SearchHistoryRemovedEvent) => JsonSerializer.Deserialize<SearchHistoryRemovedEvent>(json, options),
+                nameof(AllSearchHistoryRemovedEvent) => JsonSerializer.Deserialize<AllSearchHistoryRemovedEvent>(json, options),
                 // _ => null
                 _ => throw new JsonException($"{typeDiscriminator} is not supported yet!")
             };

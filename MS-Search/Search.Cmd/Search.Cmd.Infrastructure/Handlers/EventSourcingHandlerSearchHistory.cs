@@ -41,6 +41,7 @@ namespace Search.Cmd.Infrastructure.Handlers
             return aggregate;
         }
 
+
         public async Task RepublishEventsAsync()
         {
             var aggregateIds = await _eventStore.GetAggregateIdsAsync();

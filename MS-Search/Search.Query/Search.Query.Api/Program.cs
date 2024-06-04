@@ -13,6 +13,7 @@ using CQRS.Core.Infrastructure;
 using Search.Query.Domain.Entities;
 using Search.Query.Domain.DTOs;
 using Search.Query.Api.DTOs;
+using Microsoft.Extensions.Caching.Memory;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,7 +47,8 @@ basicSetting.paid_podcast_wav = builder.Configuration.GetSection("BasicSetting:p
 basicSetting.paid_podcast_type = builder.Configuration.GetSection("BasicSetting:paid_podcast_type").Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 
 builder.Services.AddSingleton<BasicSetting>(_ = basicSetting);
-
+// Add caching services
+builder.Services.AddMemoryCache(); // Add memory caching
 
 
 builder.Services.AddDbContext<DatabaseContext>(configureDbContext);
@@ -96,6 +98,8 @@ dispatcherSearchHistory.RegisterHandler<FindSearchHistoryListQuery>(queryHandler
 
 dispatcherSuggestion.RegisterHandler<FindSuggestionsBySearchTextFromHistoryQuery>(queryHandlerSuggestion.HandleAsync);
 dispatcherSuggestion.RegisterHandler<FindSuggestionsBySearchTextQuery>(queryHandlerSuggestion.HandleAsync);
+dispatcherSuggestion.RegisterHandler<FindSuggestionsBySearchKeyQuery>(queryHandlerSuggestion.HandleAsync);
+
 //register a singleton service for the query dispatcher
 builder.Services.AddSingleton<IQueryDispatcher<SearchEntity>>(_ => dispatcher);
 builder.Services.AddSingleton<IQueryDispatcher<SearchContent>>(_ = dispatcherContent);
@@ -132,5 +136,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Get the cache service from the service provider
+
 
 app.Run();

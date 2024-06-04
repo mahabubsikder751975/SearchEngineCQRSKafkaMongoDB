@@ -8,6 +8,6 @@ namespace Search.Query.Api.Queries
     {
         Task<List<SearchEntity>> HandleAsync(FindAllSearchesQuery query);
         Task<List<SearchEntity>> HandleAsync(FindSearchByIdQuery query);
-        Task<List<SearchEntity>> HandleAsync(FindSearchesByUserNameQuery query);       
+        Task<List<SearchEntity>> HandleAsync(FindSearchesByUserNameQuery query);        
     }
 }

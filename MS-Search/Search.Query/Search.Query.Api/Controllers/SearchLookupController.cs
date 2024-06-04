@@ -4,6 +4,7 @@ using CQRS.Core.Queries;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Search.Common.DTOs;
 using Search.Query.Api.DTOs;
@@ -28,12 +29,15 @@ namespace Search.Query.Api.Controllers
         private readonly IQueryDispatcher<SearchSuggestion> _queryDispatcherSuggestion;
 
         private readonly IQueryDispatcher<SearchHistory> _queryDispatcherSearchHistory;
+
+        private readonly IMemoryCache _memoryCache;
+
         public SearchLookupController(ILogger<SearchLookupController> logger, IQueryDispatcher<SearchEntity> queryDispatcher
         , IQueryDispatcher<SearchContent> queryDispatcherContent, IQueryDispatcher<SearchSuggestion> queryDispatcherSuggestion
         ,IQueryDispatcher<PlayListItem> queryDispatcherPlayListItem
         ,IQueryDispatcher<SearchHistory> queryDispatcherSearchHistory
-       , BasicSetting basicSetting
-
+        , BasicSetting basicSetting
+        , IMemoryCache memoryCache
         )
         {
             _logger = logger;
@@ -42,7 +46,8 @@ namespace Search.Query.Api.Controllers
             _queryDispatcherSuggestion = queryDispatcherSuggestion;
             _queryDispatcherPlayListItem = queryDispatcherPlayListItem;
             _queryDispatcherSearchHistory = queryDispatcherSearchHistory;  
-            _basicSetting = basicSetting;          
+            _basicSetting = basicSetting;
+            _memoryCache = memoryCache;
         }
 
         [HttpGet]
@@ -83,7 +88,7 @@ namespace Search.Query.Api.Controllers
             }
         }
 
-        [HttpGet("byUserName/{username}")]
+        [HttpGet("byUserName")]
         public async Task<ActionResult> GetSearchesByAuthorAsync(string username)
         {
             try
@@ -99,7 +104,7 @@ namespace Search.Query.Api.Controllers
         }
 
        [HttpGet("GetAllContentsByText")]
-        public async Task<ActionResult> GetAllContentsBySearchTextAsync([Required] string searchText,[Required] string contentType, int client, int countryValue)
+        public async Task<ActionResult> GetAllContentsBySearchTextAsync([FromQuery,Required] string searchText,[FromQuery,Required] string contentType, int client, int countryValue)
         {
             try
             {
@@ -131,7 +136,7 @@ namespace Search.Query.Api.Controllers
         }
 
         [HttpGet("GetAllContentsBySearchTextMatch")]
-        public async Task<ActionResult> GetAllContentsBySearchTextMatchAsync([Required] string searchText,[Required] string userCode, int client, int countryValue)
+        public async Task<ActionResult> GetAllContentsBySearchTextMatchAsync([FromQuery, Required] string searchText,[FromQuery, Required] string userCode, int client, int countryValue)
         {
             List<SearchSuggestion> searchResult=new();
             try
@@ -185,7 +190,7 @@ namespace Search.Query.Api.Controllers
         }
 
         [HttpGet("GetContentsByCategoryTypeAsync")]
-        public async Task<ActionResult> GetContentsByCategoryTypeAsync([Required] string searchText, [Required]string contentType, int client, int countryValue)
+        public async Task<ActionResult> GetContentsByCategoryTypeAsync([FromQuery, Required] string searchText, [FromQuery, Required]string contentType, int client, int countryValue)
         {
             try
             {
@@ -219,7 +224,7 @@ namespace Search.Query.Api.Controllers
         }
 
         [HttpGet("GetSuggestionByTextFromHistory")]
-        public async Task<ActionResult> GetSuggestionsBySearchTextFromHistoryAsync([Required] string searchText,[Required] string userCode)
+        public async Task<ActionResult> GetSuggestionsBySearchTextFromHistoryAsync([FromQuery,Required] string searchText,[FromQuery,Required] string userCode)
         {
             try
             {
@@ -246,7 +251,7 @@ namespace Search.Query.Api.Controllers
         }
 
         [HttpGet("GetSuggestionByText")]
-        public async Task<ActionResult> GetSuggestionsBySearchTextAsync([Required] string searchText)
+        public async Task<ActionResult> GetSuggestionsBySearchTextAsync([FromQuery,Required] string searchText)
         {
             try
             {
@@ -273,7 +278,7 @@ namespace Search.Query.Api.Controllers
 
 
         [HttpGet("GetTopPlayList")]        
-        public async Task<ActionResult> GetTopPlayListAsync(int pageSize)
+        public async Task<ActionResult> GetTopPlayListAsync([FromQuery] int pageSize)
         {
             try
             {
@@ -305,7 +310,7 @@ namespace Search.Query.Api.Controllers
         }
 
         [HttpGet("GetSearchHistories")]
-        public async Task<ActionResult> GetSearchHistories(string userCode)
+        public async Task<ActionResult> GetSearchHistories([FromQuery, Required] string userCode)
         {
             try
             {
@@ -335,6 +340,43 @@ namespace Search.Query.Api.Controllers
                 return ErrorResponse(ex, SAFE_ERROR_MESSAGE);
             }
         }
+        
+        [HttpGet("GetSuggestionsBySearchKey")]
+        public async Task<ActionResult> GetSuggestionsBySearchKey([FromQuery, Required] string searchText,int limit=20)
+        {
+            try
+            {
+                var contents = await _queryDispatcherSuggestion.SendAsync(new FindSuggestionsBySearchKeyQuery
+                {
+                    SearchText = searchText,
+                    MemoryCache = _memoryCache,
+                    Limit = limit
+                });
+
+
+                contents.ForEach(x =>
+                {
+                    x.ImageUrl = _basicSetting.content_url.ToString() + x.ImageUrl.ToString();
+                   // x.PlayUrl = _basicSetting.content_url.ToString() + x.PlayUrl.ToString();;
+                    // Add more property updates as needed
+                });    
+
+                if (contents == null || !contents.Any())
+                    return NoContent();
+
+                return Ok(new SearchSuggestionResponse
+                {
+                    Contents = contents,
+                    Message = "Successfully returned the contents!"
+                });
+            }
+            catch (Exception ex)
+            {
+                const string SAFE_ERROR_MESSAGE = "Error while processing the request!";
+                return ErrorResponse(ex, SAFE_ERROR_MESSAGE);
+            }
+        }
+
 
         private ActionResult NormalResponse(List<SearchEntity> searches)
         {

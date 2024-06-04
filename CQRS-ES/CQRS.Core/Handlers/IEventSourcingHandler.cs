@@ -8,8 +8,7 @@ namespace CQRS.Core.Handlers
     public interface IEventSourcingHandler<T>
     {
         Task SaveAsync(AggregateRoot aggregate);
-        Task<T> GetbyIdAsync(Guid aggregateId);       
-        
+        Task<T> GetbyIdAsync(Guid aggregateId);                          
         //Republish all events to restore read database
         Task RepublishEventsAsync(); 
     }

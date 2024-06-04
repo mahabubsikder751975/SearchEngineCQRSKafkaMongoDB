@@ -1,5 +1,6 @@
 using Search.Query.Domain.Entities;
 using Search.Query.Domain.DTOs;
+using System.Data;
 
 namespace Search.Query.Domain.Repositories
 {
@@ -10,6 +11,8 @@ namespace Search.Query.Domain.Repositories
         Task DeleteAsync(Guid searchId);
 
         Task DeleteHistoryAsync(Guid searchHistoryId);
+
+        Task DeleteAllHistoryAsync(string UserCode);
 
         Task<SearchEntity> GetByIdAsync(Guid searchId);        
         Task<List<SearchEntity>> ListAllAsync();
@@ -26,5 +29,9 @@ namespace Search.Query.Domain.Repositories
          Task<List<PlayListItem>> GetDefaultPlayListAsync(int pageSize);
 
         Task<List<SearchHistory>> GetSearchHistoriesByUserNameAsync(string userCode);
+
+        Task<List<SearchSuggestion>> GetSuggestionBySearchKeyAsync(string searchText);
+
+        Task<List<ItemUrls>> GetItemUrlsAsync(DataTable dataTable);
     }
 }

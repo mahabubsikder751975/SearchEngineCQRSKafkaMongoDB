@@ -1,9 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="IronPython" Version="3.4.1" />
+    <PackageReference Include="IronPython.StdLib" Version="3.4.1" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />    
@@ -13,5 +15,10 @@
     <ProjectReference Include="..\Search.Query.Domain\Search.Query.Domain.csproj" />
     <ProjectReference Include="..\Search.Query.Infrastructure\Search.Query.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Search.Common\Search.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Helper\MatchingScore.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

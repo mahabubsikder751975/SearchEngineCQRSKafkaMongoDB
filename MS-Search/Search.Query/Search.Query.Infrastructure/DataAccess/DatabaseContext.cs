@@ -1,4 +1,5 @@
 using System.Data;
+using System.Xml.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Search.Query.Domain.DTOs;
@@ -13,8 +14,8 @@ namespace Search.Query.Infrastructure.DataAccess
         }
 
         public DbSet<SearchEntity> Searches { get; set; }    
-        public DbSet<SearchHistoryEntity> SearchHistories { get; set; }      
-      
+        public DbSet<SearchHistoryEntity> SearchHistories { get; set; }
+                
 
         public async Task<List<SearchContent>> GetSearchCategoryContentAsync(string searchText, string contentType, int client, int countryValue)
         {
@@ -146,7 +147,7 @@ namespace Search.Query.Infrastructure.DataAccess
                         while (await reader.ReadAsync())
                         {
                             var searchSuggestion = new SearchSuggestion
-                            {                           
+                            {
                                 // Map reader columns to properties of your SearchContent DTO
                                 // For example:
                                 // Property1 = reader["ColumnName1"] != DBNull.Value ? (int)reader["ColumnName1"] : 0,
@@ -155,7 +156,7 @@ namespace Search.Query.Infrastructure.DataAccess
                                 Source = reader["Source"] != DBNull.Value ? reader["Source"].ToString() : null,
                                 ContentId = reader["ContentId"] != DBNull.Value ? reader["ContentId"].ToString() : null,
                                 ContentName = reader["ContentName"] != DBNull.Value ? reader["ContentName"].ToString() : null,
-                                Type =  reader["type"] != DBNull.Value ? reader["type"].ToString() : null,
+                                Type = reader["type"] != DBNull.Value ? reader["type"].ToString() : null,
                                 Similarity = reader["Similarity"] != DBNull.Value ? decimal.Parse(reader["Similarity"].ToString()) : 0,
                                 GroupNumber = reader["group_rn"] != DBNull.Value ? Int32.Parse(reader["group_rn"].ToString()) : 0,
                             };
@@ -320,9 +321,100 @@ namespace Search.Query.Infrastructure.DataAccess
             }
 
             return searchHistoryList;
-        }    
+        }
+
+        public async Task<List<SearchSuggestion>> GetSearchSuggestionsBySearchKeyAsync(string searchText)
+        {
+            var searchSuggestions = new List<SearchSuggestion>();
+
+            var parameters = new[]
+            {
+                new SqlParameter("@p_searchText", searchText),
+            };
+
+            using (var connection = new SqlConnection(Database.GetDbConnection().ConnectionString))
+            {
+                await connection.OpenAsync();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[Music_Streaming].[dbo].[usp_getFuzzyMatches_v2]";
+                    command.Parameters.AddRange(parameters);
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var searchSuggestion = new SearchSuggestion
+                            {
+                                // Map reader columns to properties of your SearchContent DTO
+                                // For example:
+                                Source = reader["Source"] != DBNull.Value ? reader["Source"].ToString() : null,
+                                ContentId = reader["ContentId"] != DBNull.Value ? reader["ContentId"].ToString() : null,
+                                ParentId = reader["ParentId"] != DBNull.Value ? reader["ParentId"].ToString() : null,
+                                ContentName = reader["ContentSearchName"] != DBNull.Value ? reader["ContentSearchName"].ToString() : null,
+                                Artist = reader["artist"] != DBNull.Value ? reader["artist"].ToString() : null,
+                                Type = reader["type"] != DBNull.Value ? reader["type"].ToString() : null,
+                                Similarity = reader["Similarity"] != DBNull.Value ? decimal.Parse(reader["Similarity"].ToString()) : 0,
+                                GroupNumber = reader["Rank"] != DBNull.Value ? Int32.Parse(reader["Rank"].ToString()) : 0,
+                                TrackType = reader["TrackType"] != DBNull.Value ? reader["TrackType"].ToString() : null,
+                                ImageUrl = reader["ImageUrl"] != DBNull.Value ? reader["ImageUrl"].ToString() : null,
+                                PlayUrl = reader["PlayUrl"] != DBNull.Value ? reader["PlayUrl"].ToString() : null
+                            };
+                            
+                            searchSuggestions.Add(searchSuggestion);
+                        }
+                    }
+                }
+            }
+
+            return searchSuggestions;
+        }
 
 
+        public async Task<List<ItemUrls>> GetItemUrlsAsync(DataTable itemTable)
+        {
+            var itemUrls = new List<ItemUrls>();
+  
+
+            using (var connection = new SqlConnection(Database.GetDbConnection().ConnectionString))
+            {
+                await connection.OpenAsync();
+                using (var command = connection.CreateCommand())
+                {
+                    // Create the SqlParameter and assign the DataTable as its value
+                SqlParameter tvpParam = command.Parameters.AddWithValue("@ItemsIdTypeTable", itemTable);
+                tvpParam.SqlDbType = SqlDbType.Structured;
+                tvpParam.TypeName = "dbo.ItemsIdType";
+                
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "[Music_Streaming].[dbo].[usp_ItemGetUrls]";
+                    //command.Parameters.Add(tvpParam);
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var itemUrls1 = new ItemUrls
+                            {
+                                // Map reader columns to properties of your SearchContent DTO
+                                // For example:
+                                ContentId = reader["ContentId"] != DBNull.Value ? reader["ContentId"].ToString() : null,
+                                ContentType = reader["ContentType"] != DBNull.Value ? reader["ContentType"].ToString() : null,
+                                ParentId = reader["ParentId"] != DBNull.Value ? reader["ParentId"].ToString() : null,
+                                TrackType = reader["TrackType"] != DBNull.Value ? reader["TrackType"].ToString() : null,
+                                ImageUrl = reader["ImageUrl"] != DBNull.Value ? reader["ImageUrl"].ToString() : null,
+                                PlayUrl = reader["PlayUrl"] != DBNull.Value ? reader["PlayUrl"].ToString() : null
+                            };
+                            
+                            itemUrls.Add(itemUrls1);
+                        }
+                    }
+                }
+            }
+
+            return itemUrls;
+        }
 
     }
 }

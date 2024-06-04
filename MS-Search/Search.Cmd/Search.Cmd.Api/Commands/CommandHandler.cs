@@ -36,6 +36,8 @@ namespace Search.Cmd.Api.Commands
 
         public async Task HandleAsync(NewSearchHistoryCommand command)
         {
+            //var aggregate = await _searchHistoryEventSourcingHandler.GetbyIdAsync(command.Id);
+
             var aggregate = new SearchHistoryAggregate(command.Id,command.UserCode,command.ContentId,command.ContentType,command.TrackType);
             await _eventSourcingHandler.SaveAsync(aggregate);
         }
@@ -44,6 +46,14 @@ namespace Search.Cmd.Api.Commands
         {
               var aggregate = await _searchHistoryEventSourcingHandler.GetbyIdAsync(command.Id);
              aggregate.DeleteSearchHistory(command.UserCode);
+
+             await _eventSourcingHandler.SaveAsync(aggregate);
+        }
+
+         public async Task HandleAsync(DeleteAllSearchHistoryCommand command)
+        {
+              var aggregate = new SearchHistoryAggregate() ;//await _searchHistoryEventSourcingHandler.GetbyIdAsync(command.Id);
+             aggregate.DeleteAllSearchHistory(command.UserCode);
 
              await _eventSourcingHandler.SaveAsync(aggregate);
         }

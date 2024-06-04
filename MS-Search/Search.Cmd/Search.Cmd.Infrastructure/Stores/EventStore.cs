@@ -48,6 +48,7 @@ namespace Search.Cmd.Infrastructure.Stores
             
             return eventStream.OrderBy(x=> x.Version).Select(x=>x.EventData).ToList();
         }
+      
 
         /// <summary>
         /// Save all unsaved changes to the aggregate in the form of events.
@@ -62,13 +63,17 @@ namespace Search.Cmd.Infrastructure.Stores
 
         public async Task SaveEventAsync(Guid aggregateid,IEnumerable<BaseEvent> events, int expectedversion)
         {
+            int version=0; 
+
+            if (aggregateid.ToString() !=  "00000000-0000-0000-0000-000000000000".ToString()){
              var eventStream = await _eventStoreRepository.FindByAggregateId(aggregateid);
 
              //optimistic concurrency control check to find expected version before persisting a new events to events store.
             if (expectedversion!=-1 &&  eventStream[^1].Version != expectedversion)
                 throw new ConcurrencyException("Incorrect search id provided");
             
-            var version = expectedversion;
+             version = expectedversion;
+            }
             //looping through all of our events to store in the Event store
             foreach (var @event in events)
             {

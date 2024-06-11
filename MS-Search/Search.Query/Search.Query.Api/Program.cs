@@ -48,7 +48,11 @@ basicSetting.paid_podcast_type = builder.Configuration.GetSection("BasicSetting:
 
 builder.Services.AddSingleton<BasicSetting>(_ = basicSetting);
 // Add caching services
-builder.Services.AddMemoryCache(); // Add memory caching
+ // Configure memory cache with options
+builder.Services.AddMemoryCache(options =>
+{
+    options.SizeLimit = 3072; // Set the size limit in bytes, for example, 1KB
+});
 
 
 builder.Services.AddDbContext<DatabaseContext>(configureDbContext);

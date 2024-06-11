@@ -4,7 +4,7 @@ using MongoDB.Driver;
 
 namespace CQRS.Core.Domain
 {
-    /// <summary>
+    /// <summary> Mahabub(03032024): CTO, Shadhin Music Ltd
     /// The design of the aggregate should be allow us to able to use the events to recreate 
     /// or replay the latest state of the aggregate, so that we don't have to query the read database
     /// for the latest state, else the hard separation of commands and queries would be in vain.
